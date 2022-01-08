@@ -19,10 +19,29 @@ class HomeScreen extends StatelessWidget {
           padding: const EdgeInsets.all(20.0),
           children: todoProvider.todoList.isNotEmpty
               ? todoProvider.todoList.map((todo) {
-                  return Card(
-                    child: ListTile(
-                      title: Text(todo.todo),
+                  return Dismissible(
+                    key: Key(todo.id),
+                    background: Container(
+                      color: Colors.red.shade300,
+                      child: const Center(
+                        child: Text(
+                          "Hapus?",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ),
+                    child: Card(
+                      child: ListTile(
+                        title: Text(todo.todo),
+                      ),
+                    ),
+                    onDismissed: (direction) {
+                      Provider.of<TodoListProvider>(context, listen: false)
+                          .removeTodo(todo);
+                    },
                   );
                 }).toList()
               : [
