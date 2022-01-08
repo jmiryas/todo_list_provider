@@ -17,11 +17,26 @@ class HomeScreen extends StatelessWidget {
       body: Consumer<TodoListProvider>(builder: (context, todoProvider, child) {
         return ListView(
           padding: const EdgeInsets.all(20.0),
-          children: todoProvider.todoList.map((todo) {
-            return ListTile(
-              title: Text(todo.todo),
-            );
-          }).toList(),
+          children: todoProvider.todoList.isNotEmpty
+              ? todoProvider.todoList.map((todo) {
+                  return Card(
+                    child: ListTile(
+                      title: Text(todo.todo),
+                    ),
+                  );
+                }).toList()
+              : [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height - 100.0,
+                    child: const Center(
+                      child: Text(
+                        "Todo list masih kosong!",
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  )
+                ],
         );
       }),
       floatingActionButton: FloatingActionButton(
