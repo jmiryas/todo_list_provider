@@ -8,14 +8,20 @@ import '../providers/todo_list_provider.dart';
 
 class AddEditTodoWidget extends StatelessWidget {
   final String title;
+  final TodoModel? todo;
   const AddEditTodoWidget({
     Key? key,
     required this.title,
+    this.todo,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     TextEditingController _todoController = TextEditingController();
+
+    if (todo != null) {
+      _todoController.text = todo!.todo;
+    }
 
     return AlertDialog(
       title: Text(title),
@@ -56,14 +62,24 @@ class AddEditTodoWidget extends StatelessWidget {
                 },
               );
             } else {
-              const uuid = Uuid();
+              if (todo != null) {
+                Provider.of<TodoListProvider>(context, listen: false)
+                    .updateTodo(
+                  TodoModel(
+                    id: todo!.id,
+                    todo: _todoController.text,
+                  ),
+                );
+              } else {
+                const uuid = Uuid();
 
-              Provider.of<TodoListProvider>(context, listen: false).addTodo(
-                TodoModel(
-                  id: uuid.v4(),
-                  todo: _todoController.text,
-                ),
-              );
+                Provider.of<TodoListProvider>(context, listen: false).addTodo(
+                  TodoModel(
+                    id: uuid.v4(),
+                    todo: _todoController.text,
+                  ),
+                );
+              }
 
               Navigator.pop(context);
             }
